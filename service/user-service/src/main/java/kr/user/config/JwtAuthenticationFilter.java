@@ -1,7 +1,8 @@
 package kr.user.config;
 
-import kr.nyamnyam.service.UserService;
-import kr.nyamnyam.service.impl.TokenServiceImpl;
+
+import kr.user.service.UserService;
+import kr.user.serviceImpl.TokenServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;

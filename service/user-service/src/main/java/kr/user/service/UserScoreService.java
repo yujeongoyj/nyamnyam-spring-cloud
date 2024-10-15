@@ -1,6 +1,7 @@
 package kr.user.service;
 
-import kr.nyamnyam.model.domain.UserScore;
+
+import kr.user.document.UserScore;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

@@ -2,10 +2,11 @@ package kr.user.serviceImpl;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import kr.nyamnyam.model.domain.Token;
-import kr.nyamnyam.model.repository.TokenRepository;
-import kr.nyamnyam.model.repository.UserRepository;
-import kr.nyamnyam.service.TokenService;
+
+import kr.user.document.Token;
+import kr.user.repository.TokenRepository;
+import kr.user.repository.UserRepository;
+import kr.user.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

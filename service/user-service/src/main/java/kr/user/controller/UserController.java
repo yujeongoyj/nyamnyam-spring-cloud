@@ -1,8 +1,9 @@
 package kr.user.controller;
 
-import kr.nyamnyam.model.domain.User;
-import kr.nyamnyam.service.UserService;
+
+import kr.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;

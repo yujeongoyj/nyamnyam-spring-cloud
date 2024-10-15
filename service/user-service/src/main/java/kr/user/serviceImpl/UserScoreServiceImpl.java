@@ -1,8 +1,9 @@
 package kr.user.serviceImpl;
 
-import kr.nyamnyam.model.domain.UserScore;
-import kr.nyamnyam.model.repository.UserScoreRepository;
-import kr.nyamnyam.service.UserScoreService;
+
+import kr.user.document.UserScore;
+import kr.user.repository.UserScoreRepository;
+import kr.user.service.UserScoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;

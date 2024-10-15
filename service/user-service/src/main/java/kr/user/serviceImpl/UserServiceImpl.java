@@ -1,11 +1,12 @@
 package kr.user.serviceImpl;
 
-import kr.nyamnyam.model.domain.User;
-import kr.nyamnyam.model.repository.UserRepository;
-import kr.nyamnyam.service.TokenService;
-import kr.nyamnyam.service.UserService;
-import kr.nyamnyam.service.UserThumbnailService;
+
+import kr.user.repository.UserRepository;
+import kr.user.service.TokenService;
+import kr.user.service.UserService;
+import kr.user.service.UserThumbnailService;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

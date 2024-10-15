@@ -1,7 +1,8 @@
 package kr.user.controller;
 
-import kr.nyamnyam.model.domain.UserScore;
-import kr.nyamnyam.service.UserScoreService;
+
+import kr.user.document.UserScore;
+import kr.user.service.UserScoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;

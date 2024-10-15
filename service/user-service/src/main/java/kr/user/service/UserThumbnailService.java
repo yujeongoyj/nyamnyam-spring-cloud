@@ -1,6 +1,7 @@
 package kr.user.service;
 
-import kr.nyamnyam.model.domain.User;
+
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
 

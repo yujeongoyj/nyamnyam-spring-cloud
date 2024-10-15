@@ -2,10 +2,11 @@ package kr.user.serviceImpl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.nyamnyam.model.domain.NaverMemberInfo;
-import kr.nyamnyam.model.domain.User;
-import kr.nyamnyam.model.repository.UserRepository;
-import kr.nyamnyam.service.OAuth2Service;
+
+import kr.user.document.NaverMemberInfo;
+import kr.user.repository.UserRepository;
+import kr.user.service.OAuth2Service;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
