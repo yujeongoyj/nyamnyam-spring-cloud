@@ -1,9 +1,8 @@
 package kr.user.controller;
 
-
+import kr.user.document.User;
 import kr.user.service.UserThumbnailService;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

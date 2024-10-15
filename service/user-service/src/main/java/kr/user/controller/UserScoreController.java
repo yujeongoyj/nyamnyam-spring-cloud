@@ -1,6 +1,5 @@
 package kr.user.controller;
 
-
 import kr.user.document.UserScore;
 import kr.user.service.UserScoreService;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package kr.user.repository;
 
-import kr.nyamnyam.model.domain.User;
+import kr.user.document.User;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;

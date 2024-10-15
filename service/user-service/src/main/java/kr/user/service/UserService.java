@@ -1,7 +1,6 @@
 package kr.user.service;
 
-
-import org.apache.catalina.User;
+import kr.user.document.User;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -25,7 +24,5 @@ public interface UserService {
     Mono<User> update(User user, List<MultipartFile> thumbnails);
 
     Mono<User> save(User user, List<MultipartFile> thumbnails);
-
-    Mono<String> authenticate(String username, String password);
 
 }

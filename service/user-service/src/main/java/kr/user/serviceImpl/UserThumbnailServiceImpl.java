@@ -1,11 +1,10 @@
 package kr.user.serviceImpl;
 
-
+import kr.user.document.User;
 import kr.user.document.UsersThumbnail;
 import kr.user.repository.UserThumbnailRepository;
 import kr.user.service.UserThumbnailService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;

@@ -1,9 +1,8 @@
 package kr.user.controller;
 
-
+import kr.user.document.User;
 import kr.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
@@ -53,12 +52,6 @@ public class UserController {
     public Mono<User> join(@RequestPart("user") User user,
                            @RequestPart(name = "thumbnails", required = false) List<MultipartFile> thumbnails) {
         return userService.save(user, thumbnails     != null ? thumbnails : Collections.emptyList());
-    }
-
-
-    @PostMapping("/login")
-    public Mono<String> login(@RequestParam String username, @RequestParam String password) {
-        return userService.authenticate(username, password);
     }
 
     @GetMapping("/check-username")

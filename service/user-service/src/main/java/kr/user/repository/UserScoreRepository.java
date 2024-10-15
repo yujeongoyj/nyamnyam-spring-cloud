@@ -1,6 +1,6 @@
 package kr.user.repository;
 
-import kr.nyamnyam.model.domain.UserScore;
+import kr.user.document.UserScore;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
