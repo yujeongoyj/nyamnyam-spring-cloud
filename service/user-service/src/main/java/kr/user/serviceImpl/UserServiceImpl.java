@@ -2,6 +2,7 @@ package kr.user.serviceImpl;
 
 import kr.user.document.User;
 import kr.user.repository.UserRepository;
+import kr.user.service.TokenService;
 import kr.user.service.UserService;
 import kr.user.service.UserThumbnailService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final TokenService tokenService;
     private final UserThumbnailService userThumbnailService;
 
     @Override
@@ -105,5 +107,14 @@ public class UserServiceImpl implements UserService {
                 );
     }
 
+
+
+
+    @Override
+    public Mono<String> authenticate(String username, String password) {
+        return userRepository.findByUsername(username)
+                .filter(user -> new BCryptPasswordEncoder().matches(password, user.getPassword()))
+                .flatMap(user -> tokenService.createAndSaveToken(user.getId()));
+    }
 }
 

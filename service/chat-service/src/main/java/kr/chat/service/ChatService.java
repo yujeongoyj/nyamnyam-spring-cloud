@@ -1,7 +1,8 @@
 package kr.chat.service;
 
 
-import kr.nyamnyam.model.domain.Chat;
+
+import kr.chat.document.Chat;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

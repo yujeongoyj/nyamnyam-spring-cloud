@@ -2,9 +2,11 @@ package kr.chat.controller;
 
 
 
-import kr.nyamnyam.model.domain.Chat;
-import kr.nyamnyam.service.ChatRoomService;
-import kr.nyamnyam.service.ChatService;
+
+import com.amazonaws.services.kms.model.NotFoundException;
+import kr.chat.document.Chat;
+import kr.chat.service.ChatRoomService;
+import kr.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -69,11 +71,11 @@ public class ChatController {
     }
 
     @PutMapping("/{chatId}/read/{nickname}")
-    public Mono<ResponseEntity<Chat>> updateReadBy(@PathVariable String chatId, @PathVariable String nickname) {
+    public Mono<Chat> updateReadBy(@PathVariable String chatId, @PathVariable String nickname) {
         return chatService.updateReadBy(chatId, nickname)
-                .map(updatedChat -> ResponseEntity.ok(updatedChat))
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                .switchIfEmpty(Mono.error(new NotFoundException("Chat not found")));  // 채팅이 없을 경우 예외 처리
     }
+
 
     // 파일 업로드 엔드포인트
  /*   @PostMapping("/uploads")

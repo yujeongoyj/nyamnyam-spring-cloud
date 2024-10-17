@@ -1,6 +1,7 @@
 package kr.chat.repository;
 
-import kr.nyamnyam.model.domain.ChatRoom;
+
+import kr.chat.document.ChatRoom;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;

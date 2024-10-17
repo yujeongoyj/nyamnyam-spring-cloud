@@ -1,9 +1,10 @@
 package kr.chat.serviceImpl;
 
 
-import kr.nyamnyam.model.domain.ChatRoom;
-import kr.nyamnyam.model.repository.ChatRoomRepository;
-import kr.nyamnyam.service.ChatRoomService;
+
+import kr.chat.document.ChatRoom;
+import kr.chat.repository.ChatRoomRepository;
+import kr.chat.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;

@@ -2,9 +2,9 @@ package kr.chat.serviceImpl;
 
 
 import com.amazonaws.services.s3.AmazonS3;
-import kr.nyamnyam.model.domain.Chat;
-import kr.nyamnyam.model.repository.ChatRepository;
-import kr.nyamnyam.service.ChatService;
+import kr.chat.document.Chat;
+import kr.chat.repository.ChatRepository;
+import kr.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,8 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@RequiredArgsConstructor
+
 @Service
+@RequiredArgsConstructor
 public class ChatServiceImpl implements ChatService {
 
     private final ChatRepository chatRepository;

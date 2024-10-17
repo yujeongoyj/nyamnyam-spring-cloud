@@ -32,31 +32,23 @@ public class AuthHandler {
     private final JwtTokenProvider jwtTokenProvider;
     private final WebClient webClient = WebClient.create();
 
-
     public Mono<ServerResponse> login(ServerRequest request) {
         return request.bodyToMono(LoginRequest.class)
                 .flatMap(req -> {
-                    // 대부분은 'USER' 역할로 설정하고, 특정 사용자에 대해 다른 역할을 부여
+                    // 역할에 따른 로그인 처리
                     String role;
-                    if ("adminUser".equals(req.getUsername())) {  // 'adminUser'를 관리자 계정으로 설정
-                        role = "ADMIN";  // 특정 유저는 ADMIN 역할
+                    if ("adminUser".equals(req.getUsername())) {
+                        role = "ADMIN";
                     } else {
-                        role = "USER";  // 그 외의 유저는 USER 역할
+                        role = "USER";
                     }
 
-                    // UserDetails에 역할 설정
                     List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
                     UserDetails userDetails = new UserDetailsImpl(req.getUsername(), req.getPassword(), authorities);
 
                     // JWT 생성
                     return jwtTokenProvider.generateToken(userDetails, false)
-                            .flatMap(jwt -> {
-                                // 생성된 JWT를 로그로 출력 (터미널에 표시됨)
-                                System.out.println("Generated JWT: "+ jwt);
-
-                                // 클라이언트에게 응답 반환
-                                return ServerResponse.ok().bodyValue("Login successful. JWT: " + jwt);
-                            });
+                            .flatMap(jwt -> ServerResponse.ok().bodyValue("Login successful. JWT: " + jwt));
                 })
                 .onErrorResume(e -> ServerResponse.status(HttpStatus.UNAUTHORIZED).bodyValue("Error: " + e.getMessage()));
     }

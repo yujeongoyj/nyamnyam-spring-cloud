@@ -1,15 +1,15 @@
 package kr.chat.controller;
 
-import kr.nyamnyam.model.domain.ChatRoom;
-import kr.nyamnyam.service.ChatRoomService;
-import kr.nyamnyam.service.ChatService;
+
+import com.amazonaws.services.kms.model.NotFoundException;
+import kr.chat.document.ChatRoom;
+import kr.chat.service.ChatRoomService;
+import kr.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-//Post, Put Delete  Get
 
 @RestController
 @RequiredArgsConstructor
@@ -21,11 +21,10 @@ public class ChatRoomController {
 
 
     @PostMapping("/save")
-    public Mono<ResponseEntity<ChatRoom>> save(@RequestBody ChatRoom chatRoom) {
-        return chatRoomService.save(chatRoom)
-                .map(savedChatRoom -> ResponseEntity.ok(savedChatRoom))
-                .defaultIfEmpty(ResponseEntity.badRequest().build());
+    public Mono<ChatRoom> save(@RequestBody ChatRoom chatRoom) {
+        return chatRoomService.save(chatRoom);
     }
+
 
 
     @GetMapping("/findAll/{nickname}")
@@ -41,37 +40,37 @@ public class ChatRoomController {
     }
 
     @GetMapping("/{id}")
-    public Mono<ResponseEntity<ChatRoom>> findById(@PathVariable String id) {
+    public Mono<ChatRoom> findById(@PathVariable String id) {
         return chatRoomService.findById(id)
-                .map(chatRoom -> ResponseEntity.ok(chatRoom))
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                .switchIfEmpty(Mono.error(new NotFoundException("Chat room not found"))); // 채팅방이 없는 경우 예외 처리
     }
 
 
+
     @DeleteMapping("/deleteById/{id}")
-    public Mono<ResponseEntity<Void>> deleteById(@PathVariable String id) {
+    public Mono<Void> deleteById(@PathVariable String id) {
         return chatRoomService.existsById(id)
                 .flatMap(exists -> {
                     if (exists) {
-                        return chatRoomService.deleteById(id)
-                                .then(Mono.just(ResponseEntity.ok().<Void>build()));
+                        return chatRoomService.deleteById(id);
                     } else {
-                        return Mono.just(ResponseEntity.notFound().build());
+                        return Mono.error(new NotFoundException("Chat room not found")); // 채팅방이 없는 경우 예외 처리
                     }
                 });
     }
 
 
+
     @GetMapping("/existsById/{id}")
-    public Mono<ResponseEntity<Boolean>> existsById(@PathVariable String id) {
-        return chatRoomService.existsById(id)
-                .map(exists -> ResponseEntity.ok(exists));
+    public Mono<Boolean> existsById(@PathVariable String id) {
+        return chatRoomService.existsById(id);
     }
 
+
     @GetMapping("/count")
-    public Mono<ResponseEntity<Long>> count() {
-        return chatRoomService.count()
-                .map(count -> ResponseEntity.ok(count));
+    public Mono<Long> count() {
+        return chatRoomService.count();
     }
+
 
 }
