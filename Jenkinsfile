@@ -1,23 +1,53 @@
 pipeline {
     agent any
 
+    environment {
+        repository = "yujeongoyj/nyamnyam-config-server"
+        DOCKERHUB_CREDENTIALS = credentials('DockerHub')
+        dockerImage = ''
+    }
+
     stages {
+        stage('git scm update') {
+            steps {
+                git url: 'https://github.com/yujeongoyj/nyamnyam-spring-cloud.git', branch: 'main'
+            }
+        }
+
+        stage('Grant execute permissions') {
+            steps {
+                // gradlew 파일에 실행 권한 부여
+                sh 'chmod +x gradlew'
+            }
+        }
+
         stage('Build') {
             steps {
-                echo 'Building...'
-                // 빌드 스크립트 추가
+                dir("./") {
+                    sh "./gradlew clean build --stacktrace"
+                }
             }
         }
-        stage('Test') {
+
+        stage('Build-image') {
             steps {
-                echo 'Testing...'
-                // 테스트 스크립트 추가
+                script {
+                    sh "docker build -t whdcks420/lunch:3.0 ."
+                }
             }
         }
-        stage('Deploy') {
+
+        stage('Docker Push') {
             steps {
-                echo 'Deploying...'
-                // 배포 스크립트 추가
+                script {
+                    sh 'docker push whdcks420/lunch:3.0'
+                }
+            }
+        }
+
+        stage('Cleaning up') {
+            steps {
+                sh "docker rmi whdcks420/lunch:3.0"
             }
         }
     }
