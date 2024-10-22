@@ -1,3 +1,5 @@
+version: '3.8'  # Docker Compose 버전을 명시
+
 services:
   eureka:
     hostname: eureka
@@ -104,7 +106,6 @@ services:
     networks:
       - nyamnyam-kr
 
-
   user:
     hostname: user-service
     build:
@@ -121,3 +122,7 @@ services:
         condition: service_healthy
     networks:
       - nyamnyam-kr
+
+networks:
+  nyamnyam-kr:  # 여기에서 네트워크 정의
+    driver: bridge  # 네트워크 드라이버 지정
