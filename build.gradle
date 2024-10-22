@@ -16,6 +16,7 @@ java {
 jar{enabled = true}
 bootJar{
     enabled = true
+
 }
 
 repositories {
