@@ -19,19 +19,20 @@ pipeline {
             }
         }
 
-        stage('Git Clone') {
-            steps {
-                script {
-                    dir('nyamnyam.kr/server/config-server') {
-                        git branch: 'main', url: 'https://github.com/yujeongoyj/nyamnyam-config-server.git', credentialsId: 'jenkins_token'
-                    }
+         stage('Git Clone') {
+                    steps {
+                        script {
+                            dir('server/config-server') {
+                                git branch: 'main', url: 'https://github.com/yujeongoyj/nyamnyam-config-server.git', credentialsId: 'jenkins_token'
+                            }
 
-                    dir ('nyamnyam.kr/server/config-server/src/main/resources/secret-server') {
-                        git branch: 'main', url: 'https://github.com/yujeongoyj/nyamnyam-secret-server.git', credentialsId: 'jenkins_token'
+                            dir ('server/config-server/src/main/resources/secret-server') {
+                                git branch: 'main', url: 'https://github.com/yujeongoyj/nyamnyam-secret-server.git', credentialsId: 'jenkins_token'
+                            }
+                        }
                     }
                 }
-            }
-        }
+
 
            stage('Build JAR') {
                     steps {
