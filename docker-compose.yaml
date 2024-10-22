@@ -1,5 +1,3 @@
-version: '3.8'  # Docker Compose 버전을 명시
-
 services:
   eureka:
     hostname: eureka
@@ -105,6 +103,7 @@ services:
         condition: service_healthy
     networks:
       - nyamnyam-kr
+
 
   user:
     hostname: user-service
