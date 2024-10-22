@@ -2,50 +2,66 @@ pipeline {
     agent any
 
     environment {
-        repository = "yujeongoyj/nyamnyam-config-server"
-        DOCKERHUB_CREDENTIALS = credentials('DockerHub')
-        dockerImage = ''
+        DOCKER_CREDENTIALS_ID = 'yujeongoyj'
+        DOCKER_IMAGE_PREFIX = 'yujeongoyj/nyamnyam-config-server'
     }
 
     stages {
-        stage('git scm update') {
+        stage('Checkout SCM') {
             steps {
-                git url: 'https://github.com/yujeongoyj/nyamnyam-spring-cloud.git', branch: 'main'
+                script {
+                    dir('nyamnyam.kr') {
+                        checkout scm
+                    }
+                }
             }
         }
 
-        stage('Grant execute permissions') {
-                       steps {
-                           // gradlew 파일에 실행 권한 부여
-                           sh 'chmod +x gradlew'
-                       }
-                   }
+        stage('Git Clone') {
+            steps {
+                script {
+                    dir('nyamnyam.kr/server/config-server') {
+                        git branch: 'main', url: 'https://github.com/yujeongoyj/nyamnyam-config-server.git', credentialsId: 'jenkins_token'
+                    }
 
-                   stages {
-                           stage('Build Config Server') {
-                               steps {
-                                       sh 'cd nyamnyam-spring-cloud/server/config-server && ./gradlew build'
-                               }
-                           }
-                           stage('Build Eureka Server') {
-                               steps {
-                                   sh 'cd nyamnyam-spring-cloud/server/eureka-server && ./gradlew build'
-                               }
-                           }
-                           stage('Build Gateway') {
-                               steps {
-                                   sh 'cd nyamnyam-spring-cloud/server/gateway-server && ./gradlew build'
-                               }
-                           }
-                           stage('Build Other Microservices') {
-                               steps {
-                                       sh './gradlew -p nyamnyam-spring-cloud/service/admin-service build'
-                                       sh './gradlew -p nyamnyam-spring-cloud/service/chat-service build'
-                                       sh './gradlew -p nyamnyam-spring-cloud/service/post-service build'
-                                       sh './gradlew -p nyamnyam-spring-cloud/service/restaurant-service build'
-                                       sh './gradlew -p nyamnyam-spring-cloud/service/user-service build'
-                               }
-                           }
-           }
+                    dir ('nyamnyam.kr/server/config-server/src/main/resources/secret-server') {
+                        git branch: 'main', url: 'https://github.com/yujeongoyj/nyamnyam-secret-server.git', credentialsId: 'jenkins_token'
+                    }
+                }
+            }
+        }
+
+        stage('Build JAR') {
+            steps {
+                script {
+                    dir('nyamnyam.kr') {
+                        sh 'chmod +x gradlew' // gradlew에 실행 권한 부여
+
+                        // 각 서버에 대해 gradlew를 실행하고, --warning-mode all 옵션 추가
+                        def services = [
+                            'server/config-server',
+                            'server/eureka-server',
+                            'server/gateway-server',
+                            'service/admin-service',
+                            'service/chat-service',
+                            'service/post-service',
+                            'service/restaurant-service',
+                            'service/user-service'
+                        ]
+
+                        for (service in services) {
+                            dir(service) {
+                                sh "../../gradlew clean build --warning-mode all"
+                                // 테스트 실행 및 실패 시 처리
+                                def testResult = sh(script: "../../gradlew test", returnStatus: true)
+                                if (testResult != 0) {
+                                    error "Tests failed for ${service}"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
