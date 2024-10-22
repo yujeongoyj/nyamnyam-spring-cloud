@@ -17,7 +17,11 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
-### IntelliJ IDEA ###
+*/.yaml
+*/.properties
+
+
+
 .idea
 *.iws
 *.iml
@@ -35,5 +39,5 @@ out/
 
 ### VS Code ###
 .vscode/
-
-*.yaml
+/src/main/resources/static/chromedriver-win64/
+*/docker-compose.yml
