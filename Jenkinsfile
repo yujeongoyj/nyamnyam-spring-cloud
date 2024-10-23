@@ -115,13 +115,19 @@ pipeline {
                        steps {
                            script {
                                // deploy 폴더의 모든 yaml 파일을 찾아서 수정 후 적용
-                               sh """
-                               for file in deploy/*.yaml; do
-                                   sed -i 's,TEST_IMAGE_NAME,${DOCKER_IMAGE_PREFIX}:latest,g' \$file
-                                   echo "Applying \$file"
-                                   kubectl --kubeconfig=/home/ec2-user/config apply -f \$file
-                               done
-                               """
+                            sh """
+                                for dir in deploy/*; do
+                                    if [ -d "\$dir" ]; then
+                                        for file in "\$dir"/*.yaml; do
+                                            if [ -f "\$file" ]; then
+                                                sed -i 's,TEST_IMAGE_NAME,${DOCKER_IMAGE_PREFIX}:latest,g' "\$file"
+                                                echo "Applying \$file"
+                                                kubectl --kubeconfig=/home/ec2-user/config apply -f "\$file"
+                                            fi
+                                        done
+                                    fi
+                                done
+                            """
 
 
                         /*        // deploy.yaml 파일 수정
