@@ -1,8 +1,8 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Rollout
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: post-service
-  namespace: mannazu
+  namespace: nyamnyam
 spec:
   revisionHistoryLimit: 1
   selector:
@@ -14,57 +14,35 @@ spec:
         app: post-service
     spec:
       containers:
-      - name: post-service
-        image: harbor.dorong9.com/mannazo/post-service:85
-        ports:
-        - containerPort: 8080
-        resources:
-          requests:
-            cpu: 0m
-            memory: 0Mi
-          limits:
-            cpu: 500m
-            memory: 800Mi  
-        volumeMounts:
-        - name: config-volume
-          mountPath: /app/config
-        env:
-        - name: SPRING_CONFIG_LOCATION
-          value: file:/app/config/application.properties
+        - name: post-service
+          image: nyamnyam.kr/nyamnyam/post-service:85
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: 0m
+              memory: 0Mi
+            limits:
+              cpu: 500m
+              memory: 800Mi
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/config
+          env:
+            - name: SPRING_CONFIG_LOCATION
+              value: file:/app/config/application.properties
       volumes:
-      - name: config-volume
-        configMap:
-          name: post-service-config
+        - name: config-volume
+          configMap:
+            name: post-service-config
       imagePullSecrets:
-      - name: mannazu-regcred
-  strategy:
-    canary:
-      canaryService: post-service-canary
-      stableService: post-service-stable    
-      steps:
-      - setWeight: 50
-      - pause: {duration: 10m}
-      maxSurge: "50%"
-      maxUnavailable: 0            
+        - name: nyamnyam-regcred
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: post-service-stable
-  namespace: mannazu
-spec:
-  ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
-  selector:
-    app: post-service
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: post-service-canary
-  namespace: mannazu
+  name: post-service
+  namespace: nyamnyam
 spec:
   ports:
     - protocol: TCP

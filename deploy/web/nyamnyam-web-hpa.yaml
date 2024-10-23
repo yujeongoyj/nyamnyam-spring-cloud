@@ -1,19 +1,19 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: mannazu-nextjs-hpa
-  namespace: mannazu
+  name: nyamnyam-nextjs-hpa
+  namespace: nyamnyam
 spec:
-  scaleTargetRef: 
-    apiVersion: argoproj.io/v1alpha1
-    kind: Rollout
-    name: mannazu-nextjs
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nyamnyam-nextjs
   minReplicas: 1
   maxReplicas: 2
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
