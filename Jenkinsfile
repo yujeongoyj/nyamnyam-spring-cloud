@@ -109,6 +109,7 @@ pipeline {
                     }
                 }
             }
+         }
 
         stage('Deploy to K8s') {
                        steps {
@@ -122,8 +123,6 @@ pipeline {
                                sh "kubectl --kubeconfig=/home/ec2-user/config apply -f deploy.yaml"
                            }
                        }
-           }
-
 
 
         }
