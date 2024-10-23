@@ -1,0 +1,74 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: post-service
+  namespace: mannazu
+spec:
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: post-service
+  template:
+    metadata:
+      labels:
+        app: post-service
+    spec:
+      containers:
+      - name: post-service
+        image: harbor.dorong9.com/mannazo/post-service:85
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 0m
+            memory: 0Mi
+          limits:
+            cpu: 500m
+            memory: 800Mi  
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/config
+        env:
+        - name: SPRING_CONFIG_LOCATION
+          value: file:/app/config/application.properties
+      volumes:
+      - name: config-volume
+        configMap:
+          name: post-service-config
+      imagePullSecrets:
+      - name: mannazu-regcred
+  strategy:
+    canary:
+      canaryService: post-service-canary
+      stableService: post-service-stable    
+      steps:
+      - setWeight: 50
+      - pause: {duration: 10m}
+      maxSurge: "50%"
+      maxUnavailable: 0            
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: post-service-stable
+  namespace: mannazu
+spec:
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: post-service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: post-service-canary
+  namespace: mannazu
+spec:
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: post-service

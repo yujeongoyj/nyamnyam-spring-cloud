@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mannazu-mongodb-pvc
+  namespace: mannazu
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi   # PV와 동일한 용량을 요청
+  volumeName: mannazu-mongodb-pv  

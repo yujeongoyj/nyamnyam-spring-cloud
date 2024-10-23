@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swagger-service
+  namespace: mannazu
+spec:
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: swagger-service
+  template:
+    metadata:
+      labels:
+        app: swagger-service
+    spec:
+      containers:
+      - name: swagger-service
+        image: swaggerapi/swagger-ui
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+          - name: swagger-config-volume
+            mountPath: /usr/share/nginx/html/index.html
+            subPath: index.html
+          - name: swagger-config-volume
+            mountPath: /usr/share/nginx/html/swagger-config.json
+            subPath: swagger-config.json
+        resources:
+          requests:
+            cpu: 0
+            memory: 0
+          limits:
+            cpu: 500m
+            memory: 100Mi  
+      volumes:
+        - name: swagger-config-volume
+          configMap:
+            name: swagger-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: swagger-service
+  namespace: mannazu
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  selector:
+    app: swagger-service

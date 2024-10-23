@@ -1,0 +1,63 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: mannazu-nextjs
+  namespace: mannazu
+spec:
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: mannazu-nextjs
+  template:
+    metadata:
+      labels:
+        app: mannazu-nextjs
+    spec:
+      containers:
+      - name: mannazu-nextjs
+        image: harbor.dorong9.com/mannazo/mannazu-nextjs:153
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            cpu: "0"
+            memory: "0"
+          limits:
+            cpu: "500m"
+            memory: "600Mi"   
+      imagePullSecrets:
+      - name: mannazu-regcred
+  strategy:
+    canary:
+      canaryService: mannazu-nextjs-canary
+      steps:
+      - setWeight: 50
+      - pause: {}
+      maxSurge: "50%"
+      maxUnavailable: 0           
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mannazu-nextjs
+  namespace: mannazu
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  selector:
+    app: mannazu-nextjs   
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mannazu-nextjs-canary
+  namespace: mannazu
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  selector:
+    app: mannazu-nextjs   

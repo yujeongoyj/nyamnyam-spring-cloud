@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mannazu-redis-pvc
+  namespace: mannazu
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi   # PV와 동일한 용량을 요청
+  volumeName: mannazu-redis-pv  
