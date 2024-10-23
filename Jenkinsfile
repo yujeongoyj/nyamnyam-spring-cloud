@@ -4,6 +4,9 @@ pipeline {
     environment {
         DOCKER_CREDENTIALS_ID = 'yujeongoyj'
         DOCKER_IMAGE_PREFIX = 'yujeongoyj/nyamnyam-config-server'
+        KUBECONFIG_CREDENTIALS_ID = 'kubeconfig'
+        NCP_API_KEY = credentials('ncloud-api-key')
+        NCP_SECRET_KEY = credentials('ncloud-secret-key')
         services = "server/config-server,server/eureka-server,server/gateway-server,service/admin-service,service/chat-service,service/post-service,service/restaurant-service,service/user-service"
         DOCKERHUB_CREDENTIALS = credentials('docker')
     }
@@ -28,6 +31,10 @@ pipeline {
 
                     dir ('nyamnyam.kr/server/config-server/src/main/resources/secret-server') {
                         git branch: 'main', url: 'https://github.com/yujeongoyj/nyamnyam-secret-server.git', credentialsId: 'jenkins_token'
+                    }
+
+                    dir ('nyamnyam.kr/deploy') {
+                        git branch: 'main', url: 'https://github.com/yujeongoyj/deploy.git' , credentialsId: 'jenkins_token'
                     }
                 }
             }
@@ -111,44 +118,24 @@ pipeline {
             }
          }
 
-        stage('Deploy to K8s') {
+/*         stage('Deploy to K8s') {
                        steps {
                            script {
-                             // deploy 폴더의 모든 yaml 파일을 찾아서 적용
-                                        sh """
-                                            for dir in deploy/*; do
-                                                if [ -d "\$dir" ]; then
-                                                    yaml_found=false
-                                                    for file in "\$dir"/*.yaml; do
-                                                        if [ -f "\$file" ]; then
-                                                            yaml_found=true
-                                                            sed -i 's,TEST_IMAGE_NAME,yujeongoyj/nyamnyam-config-server:latest,g' "\$file"
-                                                            echo "Applying \$file"
-                                                            kubectl --kubeconfig=/home/ec2-user/config apply -f "\$file"
-                                                        fi
-                                                    done
-                                                    if [ "\$yaml_found" = false ]; then
-                                                        echo "No YAML files found in \$dir"
-                                                    fi
-                                                else
-                                                    echo "\$dir is not a directory"
-                                                fi
-                                            done
-                                        """
+                                                 withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                                                     // 환경 변수로 API Key와 Secret Key 설정 후 ncp-iam-authenticator에 전달
+                                                     sh '''
+                                                     export NCP_ACCESS_KEY=$NCP_API_KEY
+                                                     export NCP_SECRET_KEY=$NCP_SECRET_KEY
+                                                     kubectl apply -f deploy/web/nyamnyam-web.yaml --kubeconfig=$KUBECONFIG
+                                                     '''
 
 
-                        /*        // deploy.yaml 파일 수정
-                               sh "sed -i 's,TEST_IMAGE_NAME,${DOCKER_IMAGE_PREFIX}:latest,' deploy.yaml"
-                               sh "cat deploy.yaml"
-                               // Kubernetes에서 현재 Pod 상태 확인
-                               sh "kubectl --kubeconfig=/home/ec2-user/config get pods"
-                               // deploy.yaml을 Kubernetes에 적용
-                               sh "kubectl --kubeconfig=/home/ec2-user/config apply -f deploy.yaml" */
 
                            }
                        }
 
 
         }
-    }
+    } */
+}
 }
