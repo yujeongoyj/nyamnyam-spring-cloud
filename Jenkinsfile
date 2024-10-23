@@ -114,20 +114,27 @@ pipeline {
         stage('Deploy to K8s') {
                        steps {
                            script {
-                               // deploy 폴더의 모든 yaml 파일을 찾아서 수정 후 적용
-                            sh """
-                                for dir in deploy/*; do
-                                    if [ -d "\$dir" ]; then
-                                        for file in "\$dir"/*.yaml; do
-                                            if [ -f "\$file" ]; then
-                                                sed -i 's,TEST_IMAGE_NAME,${DOCKER_IMAGE_PREFIX}:latest,g' "\$file"
-                                                echo "Applying \$file"
-                                                kubectl --kubeconfig=/home/ec2-user/config apply -f "\$file"
-                                            fi
-                                        done
-                                    fi
-                                done
-                            """
+                             // deploy 폴더의 모든 yaml 파일을 찾아서 적용
+                                        sh """
+                                            for dir in deploy/*; do
+                                                if [ -d "\$dir" ]; then
+                                                    yaml_found=false
+                                                    for file in "\$dir"/*.yaml; do
+                                                        if [ -f "\$file" ]; then
+                                                            yaml_found=true
+                                                            sed -i 's,TEST_IMAGE_NAME,yujeongoyj/nyamnyam-config-server:latest,g' "\$file"
+                                                            echo "Applying \$file"
+                                                            kubectl --kubeconfig=/home/ec2-user/config apply -f "\$file"
+                                                        fi
+                                                    done
+                                                    if [ "\$yaml_found" = false ]; then
+                                                        echo "No YAML files found in \$dir"
+                                                    fi
+                                                else
+                                                    echo "\$dir is not a directory"
+                                                fi
+                                            done
+                                        """
 
 
                         /*        // deploy.yaml 파일 수정
