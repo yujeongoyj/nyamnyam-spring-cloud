@@ -5,7 +5,7 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'yujeongoyj'
         DOCKER_IMAGE_PREFIX = 'yujeongoyj/nyamnyam-config-server'
         services = "server/config-server,server/eureka-server,server/gateway-server,service/admin-service,service/chat-service,service/post-service,service/restaurant-service,service/user-service"
-        DOCKERHUB_CREDENTIALS = credentials('yujeongoyj')
+        DOCKERHUB_CREDENTIALS = credentials('docker')
     }
 
     stages {
