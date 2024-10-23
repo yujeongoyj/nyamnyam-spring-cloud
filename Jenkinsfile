@@ -114,13 +114,24 @@ pipeline {
         stage('Deploy to K8s') {
                        steps {
                            script {
-                               // deploy.yaml 파일 수정
+                               // deploy 폴더의 모든 yaml 파일을 찾아서 수정 후 적용
+                               sh """
+                               for file in deploy/*.yaml; do
+                                   sed -i 's,TEST_IMAGE_NAME,${DOCKER_IMAGE_PREFIX}:latest,g' \$file
+                                   echo "Applying \$file"
+                                   kubectl --kubeconfig=/home/ec2-user/config apply -f \$file
+                               done
+                               """
+
+
+                        /*        // deploy.yaml 파일 수정
                                sh "sed -i 's,TEST_IMAGE_NAME,${DOCKER_IMAGE_PREFIX}:latest,' deploy.yaml"
                                sh "cat deploy.yaml"
                                // Kubernetes에서 현재 Pod 상태 확인
                                sh "kubectl --kubeconfig=/home/ec2-user/config get pods"
                                // deploy.yaml을 Kubernetes에 적용
-                               sh "kubectl --kubeconfig=/home/ec2-user/config apply -f deploy.yaml"
+                               sh "kubectl --kubeconfig=/home/ec2-user/config apply -f deploy.yaml" */
+
                            }
                        }
 
