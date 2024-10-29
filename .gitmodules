@@ -1,0 +1,9 @@
+[submodule "deploy"]
+	path = deploy
+	url = https://github.com/yujeongoyj/deploy.git
+[submodule "nyamnyam-secret-server"]
+	path = nyamnyam-secret-server
+	url = https://github.com/yujeongoyj/nyamnyam-secret-server.git
+[submodule "nyamnyam-config-server"]
+	path = nyamnyam-config-server
+	url = https://github.com/yujeongoyj/nyamnyam-config-server.git
