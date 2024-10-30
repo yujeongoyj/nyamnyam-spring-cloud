@@ -135,7 +135,7 @@ pipeline {
                     script {
                         withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
 
-                           // Ingress의 External IP 가져오기
+
                            def ingressIp = sh(script: "kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}'", returnStdout: true).trim()
 
 
