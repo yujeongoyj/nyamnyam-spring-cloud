@@ -136,7 +136,7 @@ pipeline {
                         withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
 
 
-                           def ingressIp = sh(script: "kubectl get svc ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}'", returnStdout: true).trim()
+
 
 
                             sh '''
@@ -153,6 +153,19 @@ pipeline {
                     }
                 }
             }
+
+       stage('Deploy Ingress Controller') {
+            steps {
+                script {
+                    withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                        sh '''
+                        kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml --kubeconfig=$KUBECONFIG
+                        '''
+                    }
+                }
+            }
+        }
+
 
 
        stage('Deploy to k8s') {
