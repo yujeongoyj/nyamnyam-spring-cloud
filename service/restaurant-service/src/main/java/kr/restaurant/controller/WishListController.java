@@ -43,6 +43,13 @@ public class WishListController {
         return wishListService.getWishLists(userId);
     }
 
+/*    @GetMapping("/{wishListId}/restaurants")
+    public ResponseEntity<List<RestaurantModel>> getRestaurants(
+            @RequestHeader Long userId,
+            @PathVariable Long wishListId) {
+        List<RestaurantModel> restaurants = wishListRestaurantService.findRestaurantsByUserIdAndWishListId(userId, wishListId);
+        return ResponseEntity.ok(restaurants);
+    }*/
 
     // 선택한 위시리스트에 들어있는 식당들 가져오기
     @GetMapping("/restaurants")
